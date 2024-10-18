@@ -1,29 +1,135 @@
 /**/
+/**/
+import { Point } from './object.ts';
 declare var requestAnimationFrame: (callback: (timestamp: number) => void) => number;
-type drawing = (timestamp: number) => void;
-type collisions = () => void;
+type drawing = (canvas: Canvas, timestamp: number) => void;
+type collisions = (canvas: Canvas) => void;
 
-const canvas = document.createElement('canvas');
-canvas.id = 'canvas';
+export class Canvas {
+  element: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  center: Point;
 
-export const canvasD2 = (drawing: drawing, collisions: collisions) => {
-  const ctx = canvas.getContext('2d');
+  constructor() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'Canvas';
 
-  requestAnimationFrame =
-    window.requestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.msRequestAnimationFrame;
+    // Estilos para que cubra la pantalla
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.transformOrigin = 'center';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.backgroundColor = 'transparent';
+    /*
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    */
+    // Objeto con coordenadas centrales
+    this.center = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    };
 
-  window.requestAnimationFrame = requestAnimationFrame;
+    const div = document.querySelector<HTMLDivElement>('#app');
+    /*
+    div!.style.width = '100dvw';
+    div!.style.height = '100dvh';
+    div!.style.perspective = '1000px';
+    div!.style.perspectiveOrigin = 'center';
+    div!.style.transformStyle = 'preserve-3d';
+    */
 
-  window.requestAnimationFrame((time: number) => draw(drawing, collisions, time));
-  return { ctx, canvas };
+    this.element = canvas;
+    this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  }
+
+  backgroud(url_: string) {
+    this.element.style.backgroundImage = `url(${url_})`;
+    this.element.style.backgroundRepeat = 'repeat';
+  }
+
+  public text(text: string, point: Point, color?: string, font?: string) {
+    this.ctx.fillStyle = color ?? '#ffffff';
+    this.ctx.font = font ?? '16px Arial';
+    this.ctx.fillText(text, point.x, point.y);
+  }
+
+  public keyDownHandler(callback: (keyboard: string) => void) {
+    this.element.addEventListener('keydown', (event) => {
+      const { key } = event;
+      callback(key);
+    });
+  }
+
+  public keyaUpHandler(callback: (keyboard: string) => void) {
+    this.element.addEventListener('keyup', (event) => {
+      const { key } = event;
+      callback(key);
+    });
+  }
+
+  public keyPressHandler(callback: (keyboard: string) => void) {
+    this.element.addEventListener('keypress', (event) => {
+      const { key } = event;
+      callback(key);
+    });
+  }
+
+  public touchstart(handleStart: (event: TouchEvent) => void) {
+    window.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      handleStart(event, this);
+    }, false);
+  }
+
+  public touchend(handleEnd: (event: TouchEvent) => void) {
+    window.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      handleEnd(event, this.canvas);
+    }, false);
+  }
+
+  public touchcancel(handleCancel: (event: TouchEvent) => void) {
+    window.addEventListener("touchcancel", (event) => {
+      event.preventDefault();
+      handleCancel(event, this.canvas);
+    }, false);
+  }
+
+  public touchleave(handleLeave: (event: TouchEventInit) => void) {
+    window.addEventListener("touchleave", (event) => {
+      event.preventDefault();
+      handleLeave(event, this.canvas);
+    }, false);
+  }
+
+  public touchmove(handleMove: (event: TouchEvent) => void) {
+    window.addEventListener("touchmove", (event) => {
+      event.preventDefault();
+      handleMove(event, this.canvas);
+    }, false);
+  }
+}
+
+export const getCanvas = (drawing: drawing, collisions: collisions) => {
+  const canvas = new Canvas();
+
+  window.requestAnimationFrame((time: number) =>
+    draw(canvas, drawing, collisions, time));
+
+  return canvas.element;
 };
 
-const draw = (drawing: drawing, collisions: collisions, timestamp: number) => {
-  drawing(timestamp);
-  collisions();
+function draw(canvas: Canvas, drawing: drawing, collisions: collisions, timestamp: number) {
 
-  window.requestAnimationFrame((time: number) => draw(drawing, collisions, time));
+  if (canvas.ctx) {
+    canvas.ctx.clearRect(0, 0, canvas.element.width, canvas.element.height);
+  }
+
+  drawing(canvas, timestamp);
+  collisions(canvas);
+
+  window.requestAnimationFrame((time: number) => draw(canvas, drawing, collisions, time));
 }
