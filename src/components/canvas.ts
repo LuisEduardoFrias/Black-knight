@@ -1,6 +1,6 @@
 /**/
 /**/
-import { Point } from './object.ts';
+import { Point } from './object.js';
 declare var requestAnimationFrame: (callback: (timestamp: number) => void) => number;
 type drawing = (canvas: Canvas, timestamp: number) => void;
 type collisions = (canvas: Canvas) => void;
@@ -50,7 +50,11 @@ export class Canvas {
     this.element.style.backgroundRepeat = 'repeat';
   }
 
-  public text(text: string, point: Point, color?: string, font?: string) {
+  public text(
+    text: string,
+    point: Point,
+    color?: string,
+    font?: string) {
     this.ctx.fillStyle = color ?? '#ffffff';
     this.ctx.font = font ?? '16px Arial';
     this.ctx.fillText(text, point.x, point.y);
@@ -77,38 +81,38 @@ export class Canvas {
     });
   }
 
-  public touchstart(handleStart: (event: TouchEvent) => void) {
-    window.addEventListener("touchstart", (event) => {
-      event.preventDefault();
+  public touchstart(handleStart: (event: TouchEvent, canvas: Canvas) => void) {
+    this.element.addEventListener("touchstart", (event) => {
+     // event.preventDefault();
       handleStart(event, this);
+    });
+  }
+
+  public touchend(handleEnd: (event: TouchEvent, canvas: Canvas) => void) {
+    this.element.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      handleEnd(event, this);
     }, false);
   }
 
-  public touchend(handleEnd: (event: TouchEvent) => void) {
-    window.addEventListener("touchend", (event) => {
+  public touchcancel(handleCancel: (event: TouchEvent, canvas: Canvas) => void) {
+    this.element.addEventListener("touchcancel", (event) => {
       event.preventDefault();
-      handleEnd(event, this.canvas);
+      handleCancel(event, this);
     }, false);
   }
 
-  public touchcancel(handleCancel: (event: TouchEvent) => void) {
-    window.addEventListener("touchcancel", (event) => {
+  public touchleave(handleLeave: (event: TouchEventInit, canvas: Canvas) => void) {
+    this.element.addEventListener("touchleave", (event) => {
       event.preventDefault();
-      handleCancel(event, this.canvas);
+      handleLeave(event, this);
     }, false);
   }
 
-  public touchleave(handleLeave: (event: TouchEventInit) => void) {
-    window.addEventListener("touchleave", (event) => {
+  public touchmove(handleMove: (event: TouchEvent, canvas: Canvas) => void) {
+    this.element.addEventListener("touchmove", (event) => {
       event.preventDefault();
-      handleLeave(event, this.canvas);
-    }, false);
-  }
-
-  public touchmove(handleMove: (event: TouchEvent) => void) {
-    window.addEventListener("touchmove", (event) => {
-      event.preventDefault();
-      handleMove(event, this.canvas);
+      handleMove(event, this);
     }, false);
   }
 }

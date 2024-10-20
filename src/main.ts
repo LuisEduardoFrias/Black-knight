@@ -1,8 +1,8 @@
 /**/
 import './style.css'
-import { getCanvas, Canvas } from './components/canvas.ts'
-import AniObj, { Size, Point } from './components/object.ts';
-import Sprite from './components/sprite.ts';
+import { getCanvas, Canvas } from './components/canvas.js'
+import AniObj, { Size, Point } from './components/object.js';
+import Sprite from './components/sprite.js';
 
 const spriteK = new Sprite('/FreePack/KingWhite.png');
 const spriteP = new Sprite('/FreePack/PawnWhite.png');
@@ -24,13 +24,13 @@ function collisions(canvas: Canvas) {
 }
 const element1 = getCanvas(drawing, collisions);
 
-function drowBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
-  const ii = canvas.center.y - 100;
-  const jj = canvas.center.x - 100;
+function drawBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
+  const centerX = canvas.center.y - 100;
+  const centerY = canvas.center.x - 100;
   const border = 5;
 
   ctx.fillStyle = '#000000';
-  ctx.fillRect(jj - border, ii - border,
+  ctx.fillRect(centerY - border, centerX - border,
     squareSize * 4 + (border * 2),
     squareSize * 4 + (border * 2));
 
@@ -38,8 +38,8 @@ function drowBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
   for (let i = 0; i < boardSize; i++) {
     for (let j = 0; j < boardSize; j++) {
       // Calcula la posición del cuadrado
-      let x = jj + j * squareSize;
-      let y = ii + i * squareSize;
+      let x = centerY + j * squareSize;
+      let y = centerX + i * squareSize;
 
       // Define el color del cuadrado
       let color = (i + j) % 2 === 0 ? '#5b2c1b' : '#c7a181';
@@ -72,11 +72,89 @@ function drowBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
   }
 
   // Dibuja el texto en el cuadrado combinado
-  canvas.text('Pawn = Queen', { x: jj + 54, y: ii + 164 }, '#643437', '14px Arial');
-  canvas.text('promote the pawn', { x: jj + 58, y: ii + 174 }, '#643437', '10px Arial');
-  canvas.text('then move the queen', { x: jj + 52, y: ii + 184 }, '#643437', '10px Arial');
-  canvas.text('to the red square', { x: jj + 60, y: ii + 194 }, '#643437', '10px Arial');
+  canvas.text('Pawn = Queen', { x: centerY + 54, y: centerX + 164 }, '#643437', '14px Arial');
+  canvas.text('promote the pawn', { x: centerY + 58, y: centerX + 174 }, '#643437', '10px Arial');
+  canvas.text('then move the queen', { x: centerY + 52, y: centerX + 184 }, '#643437', '10px Arial');
+  canvas.text('to the red square', { x: centerY + 60, y: centerX + 194 }, '#643437', '10px Arial');
 }
+function drawPiece(canvas: Canvas) {
+  const element = canvas.element;
+  const centerX = canvas.center.y - 94;
+  const centerY = canvas.center.x - 94;
+
+  const caballo1 = AniObj(element, size, { x: centerY + 0, y: centerX + 0 });
+  const caballo2 = AniObj(element, size, { x: centerY + 50, y: centerX + 0 });
+  const caballo3 = AniObj(element, size, { x: centerY + 100, y: centerX + 0 });
+  const caballo4 = AniObj(element, size, { x: centerY + 150, y: centerX + 0 });
+
+  const alfil1 = AniObj(element, size, { x: centerY + 0, y: centerX + 50 });
+  const alfil2 = AniObj(element, size, { x: centerY + 50, y: centerX + 50 });
+  const alfil3 = AniObj(element, size, { x: centerY + 100, y: centerX + 50 });
+  const alfil4 = AniObj(element, size, { x: centerY + 150, y: centerX + 50 });
+
+  const torre1 = AniObj(element, size, { x: centerY + 0, y: centerX + 100 });
+  const torre2 = AniObj(element, size, { x: centerY + 50, y: centerX + 100 });
+  const torre3 = AniObj(element, size, { x: centerY + 100, y: centerX + 100 });
+  const torre4 = AniObj(element, size, { x: centerY + 150, y: centerX + 100 });
+
+  const peon = AniObj(element, size, { x: centerY + 150, y: centerX + 150 });
+  const rey = AniObj(element, size, { x: centerY + 143, y: centerX + 0 });
+
+  //propiedades de piezas
+  rey.visibility = false;
+
+  caballo1.sprite(spriteN);
+  caballo2.sprite(spriteN);
+  caballo3.sprite(spriteN);
+  caballo4.sprite(spriteN);
+
+  alfil1.sprite(spriteB);
+  alfil2.sprite(spriteB);
+  alfil3.sprite(spriteB);
+  alfil4.sprite(spriteB);
+
+  torre1.sprite(spriteR);
+  torre2.sprite(spriteR);
+  torre3.sprite(spriteR);
+  torre4.sprite(spriteR);
+
+  peon.sprite(spriteP);
+  rey.sprite(spriteK);
+
+
+  const center_X = canvas.center.y - 100;
+  const center_Y = canvas.center.x - 100;
+
+  canvas.text("x : " + center_X, { x: 15, y: 50 });
+  canvas.text("y : " + center_Y, { x: 15, y: 65 });
+
+
+  canvas.touchstart((event: TouchEvent, cv: Canvas) => {
+    const touch = event.touches[0];
+    caballo1.setDx = centerY + 0;
+    caballo1.setDy = centerX + 50;
+
+    if (
+      touch.clientX > center_X &&
+      touch.clientY > center_Y &&
+      touch.clientX < (center_X + 200) &&
+      touch.clientY < (center_Y + 200)) {
+    }
+
+    //touch.screenX
+    const x = touch.clientX - canvas.element.offsetLeft;
+    const y = touch.clientY - canvas.element.offsetTop;
+
+    const ctx = canvas.element.getContext('2d');
+
+    ctx?.fillRect(15, 110, 50, 50);
+
+    cv.text("cli x : " + touch.clientX, { x: 15, y: 80 });
+    cv.text("cli y : " + touch.clientY, { x: 15, y: 95 });
+  });
+
+}
+
 //plano 2
 function drawing2(canvas: Canvas, _: number) {
   const element: HTMLCanvasElement = canvas.element;
@@ -84,57 +162,12 @@ function drawing2(canvas: Canvas, _: number) {
   element2.width = window.innerWidth;
   element2.height = window.innerHeight;
 
-  drowBoard(canvas, ctx as CanvasRenderingContext2D);
-
+  //crear board
+  drawBoard(canvas, ctx as CanvasRenderingContext2D);
   //crear piezas
-  const ii = canvas.center.y - 94;
-  const jj = canvas.center.x - 94;
-
-  const caballo1 = AniObj(element, size, { x: jj + 0, y: ii + 0 });
-  const caballo2 = AniObj(element, size, { x: jj + 50, y: ii + 0 });
-  const caballo3 = AniObj(element, size, { x: jj + 100, y: ii + 0 });
-  const caballo4 = AniObj(element, size, { x: jj + 150, y: ii + 0 });
-
-  const alfil1 = AniObj(element, size, { x: jj + 0, y: ii + 50 });
-  const alfil2 = AniObj(element, size, { x: jj + 50, y: ii + 50 });
-  const alfil3 = AniObj(element, size, { x: jj + 100, y: ii + 50 });
-  const alfil4 = AniObj(element, size, { x: jj + 150, y: ii + 50 });
-
-  const torre1 = AniObj(element, size, { x: jj + 0, y: ii + 100 });
-  const torre2 = AniObj(element, size, { x: jj + 50, y: ii + 100 });
-  const torre3 = AniObj(element, size, { x: jj + 100, y: ii + 100 });
-  const torre4 = AniObj(element, size, { x: jj + 150, y: ii + 100 });
-
-  const peon = AniObj(element, size, { x: jj + 150, y: ii + 150 });
-  const rey = AniObj(element, size, { x: jj + 143, y: ii + 0 });
-
-  //propiedades de piezas
-  rey.visibility = false;
-
-  caballo1.sprite(spriteN, { x: 0, y: 0 });
-  caballo2.sprite(spriteN, { x: 0, y: 0 });
-  caballo3.sprite(spriteN, { x: 0, y: 0 });
-  caballo4.sprite(spriteN, { x: 0, y: 0 });
-
-  alfil1.sprite(spriteB, { x: 0, y: 0 });
-  alfil2.sprite(spriteB, { x: 0, y: 0 });
-  alfil3.sprite(spriteB, { x: 0, y: 0 });
-  alfil4.sprite(spriteB, { x: 0, y: 0 });
-
-  torre1.sprite(spriteR, { x: 0, y: 0 });
-  torre2.sprite(spriteR, { x: 0, y: 0 });
-  torre3.sprite(spriteR, { x: 0, y: 0 });
-  torre4.sprite(spriteR, { x: 0, y: 0 });
-
-  peon.sprite(spriteP, { x: 0, y: 0 });
-  rey.sprite(spriteK, { x: 0, y: 0 });
-
-  canvas.touchstart((event: TouchEvent, canvas: Canvas) => {
-
-  });
-
+  drawPiece(canvas);
 }
-function collisions2(canvas: Canvas, element: HTMLCanvasElement) {
+function collisions2(canvas: Canvas) {
 
 }
 const element2 = getCanvas(drawing2, collisions2);
@@ -142,43 +175,3 @@ const element2 = getCanvas(drawing2, collisions2);
 const div = document.querySelector<HTMLDivElement>('#app');
 div!.appendChild(element1);
 div!.appendChild(element2);
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-
-interface Touch {
-  identifier: number;
-  target: EventTarget;
-  screenX: number;
-  screenY: number;
-  clientX: number;
-  clientY: number;
-  pageX: number;
-  pageY: number;
-};
-
-interface TouchList {
-  length: number;
-  item(index: number): Touch;
-  identifiedTouch(identifier: number): Touch;
-};
-
-interface TouchEvent extends UIEvent {
-  touches: TouchList;
-  targetTouches: TouchList;
-  changedTouches: TouchList;
-  altKey: boolean;
-  metaKey: boolean;
-  ctrlKey: boolean;
-  shiftKey: boolean;
-  initTouchEvent(type: string, canBubble: boolean,
-    cancelable: boolean, view: AbstractView, detail: number,
-    ctrlKey: boolean, altKey: boolean, shiftKey: boolean,
-    metaKey: boolean, touches: TouchList, targetTouches: TouchList,
-    schangedTouches: TouchList);
-};
-
-declare var TouchEvent: {
-  prototype: TouchEvent;
-  new(): TouchEvent;
-}

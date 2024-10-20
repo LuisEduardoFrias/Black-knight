@@ -1,7 +1,8 @@
 /*
  * */
 
-import Sprite from "./sprite";
+import Sprite from "./sprite.js";
+
 export type Size = {
   width: number,
   height: number
@@ -131,12 +132,13 @@ class AnimateObject {
     this.drawRect();
   }
 
-  sprite(sprite: Sprite, clip: Point, cutSize?: Size, position?: Point) {
+  sprite(sprite: Sprite, clip?: Point, cutSize?: Size, position?: Point) {
     if (this.visibility) {
       const ctx = this.canvas.getContext('2d');
       ctx?.drawImage(
         sprite.img,//image
-        clip.x, clip.y, //cordenadas de recorte
+        clip?.x ?? 0, 
+        clip?.y ?? 0, //cordenadas de recorte
         cutSize?.width ?? this.width,
         cutSize?.height ?? this.height,//tamaño del recorte
         position?.x ?? this.dx,
