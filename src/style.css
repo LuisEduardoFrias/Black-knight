@@ -1,6 +1,24 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    position: relative;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+body>#app {
+  perspective: 1000px;
+  perspective-origin: center;
+  perspective-origin: 50% 50%;
+}
+
+#cv1 {
+  transform: scale(.9) translateZ(100px);
+}
+
+#cv2 {
+  transform: scale(1) translateZ(50px);
+}
+
+#cv3 {
+  transform: scale(1) translateZ(0px);
 }

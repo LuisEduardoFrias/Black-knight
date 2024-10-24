@@ -22,7 +22,7 @@ class AnimateObject {
   private px: number;
   private py: number;
   public visibility: boolean;
-  canvas: HTMLCanvasElement;
+  private canvas: HTMLCanvasElement;
 
   private u: number = 0;    //Es la velocidad inicial(en este caso, 0 m / s)
   private a: number = 9.8; //Es la aceleración debida a la gravedad(9.8 m / s²)
@@ -57,7 +57,10 @@ class AnimateObject {
 
   private drawRect() {
     const ctx = this.canvas.getContext('2d');
+    ctx.fillStyle = '#4cf4e1';
+
     /*
+    ctx?.fillRect(this.dx, this.dy, this.width, this.height);
     ctx?.clearRect(this.oldDx, this.oldDy, this.width, this.height);
     ctx?.fillRect(this.dx + 5, this.dy + 5, this.width - 10, this.height - 10);
 
@@ -135,15 +138,17 @@ class AnimateObject {
   sprite(sprite: Sprite, clip?: Point, cutSize?: Size, position?: Point) {
     if (this.visibility) {
       const ctx = this.canvas.getContext('2d');
+      //ctx?.fillRect(this.dx, this.dy, 50, 50)
       ctx?.drawImage(
         sprite.img,//image
-        clip?.x ?? 0, 
+        clip?.x ?? 0,
         clip?.y ?? 0, //cordenadas de recorte
         cutSize?.width ?? this.width,
         cutSize?.height ?? this.height,//tamaño del recorte
         position?.x ?? this.dx,
         position?.y ?? this.dy,//posicion del dibujo
-        this.width, this.height);//medidas del dibujo
+        this.width,
+        this.height);//medidas del dibujo
     }
   }
 
