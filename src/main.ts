@@ -1,19 +1,20 @@
 /**/
 import './style.css'
 import { getCanvas, Canvas } from './components/canvas.js'
+import Piece, { pieceOf } from './components/piece.ts';
 import AniObj, { Size, Point } from './components/object.js';
 import Sprite from './components/sprite.js';
-import { TouchEvent } from './components/touch_event.js';
-
-const spriteK = new Sprite('/FreePack/KingWhite.png');
-const spriteP = new Sprite('/FreePack/PawnWhite.png');
-const spriteR = new Sprite('/FreePack/RookWhite.png');
-const spriteN = new Sprite('/FreePack/NightWhite.png');
-const spriteB = new Sprite('/FreePack/BishopWhite.png');
 
 const squareSize = 50;
 const boardSize = 4;
 const size: Size = { width: squareSize, height: squareSize };
+type pieceID = `${pieceOf}-${number}`;
+type piecesCordenate = { point: Point, pieceId: pieceID | null };
+const pieces: piecesCordenate[] = [
+  { point: { x: 5, y: 5 }, pieceId: null }, { point: { x: 55, y: 5, }, pieceId: null }, { point: { x: 105, y: 5, }, pieceId: null }, { point: { x: 155, y: 5, }, pieceId: null },
+  { point: { x: 5, y: 55, }, pieceId: null }, { point: { x: 55, y: 55, }, pieceId: null }, { point: { x: 105, y: 55, }, pieceId: null }, { point: { x: 155, y: 55, }, pieceId: null },
+  { point: { x: 5, y: 105, }, pieceId: null }, { point: { x: 55, y: 105, }, pieceId: null }, { point: { x: 105, y: 105, }, pieceId: null }, { point: { x: 155, y: 105, }, pieceId: null },
+  { point: { x: 5, y: 155, }, pieceId: null }, { point: { x: 155, y: 155, }, pieceId: null }];
 
 //plano 1
 function drawing(canvas: Canvas, timestamp: number) {
@@ -23,17 +24,6 @@ function drawing(canvas: Canvas, timestamp: number) {
   canvas.backgroud('/roble-texture.jpg');
 }
 const canvas1 = getCanvas(drawing, null, 'cv1');
-
-type piecesCordenate = [number, number, string | null];
-const pieces: piecesCordenate[] = [
-  [5, 5, 'c'], [55, 5, 'c'], [105, 5, 'c'], [155, 5, 'c'],
-  [5, 55, 'a'], [55, 55, 'a'], [105, 55, 'a'], [155, 55, 'a'],
-  [5, 105, 't'], [55, 105, 't'], [105, 105, 't'], [155, 105, 't'],
-  [5, 155, null], [155, 155, 'p']];
-
-type pieseSl = { size: Size, piece: string };
-let pieceSelected: pieseSl | null;
-let movements: piecesCordenate[] | null;
 
 function drawBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
   const centerX = 5;
@@ -90,116 +80,51 @@ function drawBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
 }
 function drawPiece(canvas: Canvas) {
   const element: HTMLCanvasElement = canvas.element;
-  const ctx: CanvasRenderingContext2D = element.getContext('2d');
-  const centerX = 5;
-  const centerY = 5;
 
-  const caballo1 = AniObj(element, size, { x: pieces[0][0], y: pieces[0][1] });
-  caballo1.sprite(spriteN);
-  const caballo2 = AniObj(element, size, { x: pieces[1][0], y: pieces[1][1] });
-  caballo2.sprite(spriteN);
-  const caballo3 = AniObj(element, size, { x: pieces[2][0], y: pieces[2][1] });
-  caballo3.sprite(spriteN);
-  const caballo4 = AniObj(element, size, { x: pieces[3][0], y: pieces[3][1] });
-  caballo4.sprite(spriteN);
+  const caballo1 = new Piece(canvas2, pieceOf.C, size, { x: pieces[0][0], y: pieces[0][1] });
+  const caballo2 = new Piece(canvas2, pieceOf.C, size, { x: pieces[1][0], y: pieces[1][1] });
+  const caballo3 = new Piece(canvas2, pieceOf.C, size, { x: pieces[2][0], y: pieces[2][1] });
+  const caballo4 = new Piece(canvas2, pieceOf.C, size, { x: pieces[3][0], y: pieces[3][1] });
 
-  const alfil1 = AniObj(element, size, { x: pieces[4][0], y: pieces[4][1] });
-  alfil1.sprite(spriteB);
-  const alfil2 = AniObj(element, size, { x: pieces[5][0], y: pieces[5][1] });
-  alfil2.sprite(spriteB);
-  const alfil3 = AniObj(element, size, { x: pieces[6][0], y: pieces[6][1] });
-  alfil3.sprite(spriteB);
-  const alfil4 = AniObj(element, size, { x: pieces[7][0], y: pieces[7][1] });
-  alfil4.sprite(spriteB);
+  const alfil1 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[4][0], y: pieces[4][1] });
+  const alfil2 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[5][0], y: pieces[5][1] });
+  const alfil3 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[6][0], y: pieces[6][1] });
+  const alfil4 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[7][0], y: pieces[7][1] });
 
-  const torre1 = AniObj(element, size, { x: pieces[8][0], y: pieces[8][1] });
-  torre1.sprite(spriteR);
-  const torre2 = AniObj(element, size, { x: pieces[9][0], y: pieces[9][1] });
-  torre2.sprite(spriteR);
-  const torre3 = AniObj(element, size, { x: pieces[10][0], y: pieces[10][1] });
-  torre3.sprite(spriteR);
-  const torre4 = AniObj(element, size, { x: pieces[11][0], y: pieces[11][1] });
-  torre4.sprite(spriteR);
+  const torre1 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[8][0], y: pieces[8][1] });
+  const torre2 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[9][0], y: pieces[9][1] });
+  const torre3 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[10][0], y: pieces[10][1] });
+  const torre4 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[11][0], y: pieces[11][1] });
 
-  const peon = AniObj(element, size, { x: pieces[13][0], y: pieces[13][1] });
-  peon.sprite(spriteP);
+  const peon = new Piece(canvas2, pieceOf.P, size,{ x: pieces[13][0], y: pieces[13][1] });
 
-  const rey = AniObj(element, size, { x: pieces[12][0], y: pieces[12][1] });
+  const rey = new Piece(canvas2, pieceOf.R, size,{ x: pieces[12][0], y: pieces[12][1] });
   rey.visibility = false;
-  rey.sprite(spriteK);
 
 }
+
 function drawPieceSelected(canvas: Canvas) {
   if (pieceSelected) {
-    const ctx: CanvasRenderingContext2D = canvas2?.ctx;
+    const ctx: CanvasRenderingContext2D = canvas.ctx;
     ctx.fillStyle = "#f1ff0878";
-    ctx.fillRect(pieceSelected.size.x, pieceSelected.size.y, squareSize, squareSize)
-
-    const pieceFindIndex = pieces.findIndex((piecesC) => {
-      if (piecesC[0] === pieceSelected.size.x &&
-        piecesC[1] === pieceSelected.size.y) {
-        return true;
-      }
-    });
-
-    switch (pieceSelected.piece) {
-      case 'c': { };
-      case 'a': { };
-      case 't': {
-        pieces.filter((pc: piecesCordenate, index: number) => {
-          movements = [];
-          if (index === pieceFindIndex - 4) {
-            if (!pc.piece) {
-const piece: piecesCordenate = {
-                size: pc.size,
-                piece: 't'
-              }
-              movements.push(piece);
-              }
-          }
-          if (index === pieceFindIndex - 1) {
-            if (!pc.piece) {
-const piece: piecesCordenate = {
-                size: pc.size,
-                piece: 't'
-              }
-              movements.push(piece);
-              }
-          }
-          if (index === pieceFindIndex + 1) {
-            if (!pc.piece) {
-              const piece: piecesCordenate = {
-                size: pc.size,
-                piece: 't'
-              }
-              movements.push(piece);
-              }
-          }
-          if (index === pieceFindIndex + 4) {
-            if (!pc.piece) {
-              const piece: piecesCordenate = {
-                size: pc.size,
-                piece: 't'
-              }
-              movements.push(piece);
-            }
-          }
-        });
-      };
-      case 'r': { };
-      case 'p': { };
-    }
+    ctx.fillRect(pieceSelected.point.x, pieceSelected.point.y, squareSize,
+      squareSize);
   }
 }
 function drawMovements(canvas: Canvas) {
-  if (movements) {
-    const ctx: CanvasRenderingContext2D = canvas2?.ctx;
+  if (movements.length > 0) {
+    const ctx: CanvasRenderingContext2D = canvas?.ctx;
     ctx.fillStyle = "#0dff0890";
+
+    let index;
     movements.forEach(m => {
       ctx.fillRect(m[0], m[1], squareSize, squareSize)
+      index = m[3];
     })
+    pieces[index][2] = "m";
   }
 }
+
 //plano 2
 function drawing2(canvas: Canvas, _: number) {
   const element: HTMLCanvasElement = canvas.element;
@@ -227,32 +152,190 @@ canvas2.touchstart((event: TouchEvent) => {
   // ctx.clearRect(0, 0, element.width, element.height);
   const touch = event.touches[0];
 
-  const x = touch.clientX - canvas2?.element.offsetLeft;
-  const y = touch.clientY - canvas2?.element.offsetTop;
+  const pointX = touch.clientX - canvas2?.element.offsetLeft;
+  const pointY = touch.clientY - canvas2?.element.offsetTop;
 
-  const selectSize = {
-    x: ((Math.floor(x / squareSize + 2) * 50) + 5),
-    y: ((Math.floor(y / squareSize + 2) * 50) + 5)
-  };
+  let rectIndexSelected;
+  const rectPointSelected = pieces.find((piecesC: piecesCordenate, index: number) => {
+    const x = ((Math.floor(pointX / squareSize + 2) * 50) + 5);
+    const y = ((Math.floor(pointY / squareSize + 2) * 50) + 5);
 
-  const pieceFiltes = pieces.find((piecesC) => {
-    if (piecesC[0] === selectSize.x && piecesC[1] === selectSize.y) {
+    if (piecesC[0] === x && piecesC[1] === y) {
+      rectIndexSelected = index;
       return true;
     }
   });
+
+  if (rectPointSelected[2] !== null && rectPointSelected[2] !== 'm') {
+    movements = [];
+
+    if (rectPointSelected) {
+      switch (rectPointSelected[2]) {
+        /* case 'c': {
+           pieces.filter((pc: piecesCordenate, index: number) => {
+             if (index === rectIndexSelected - 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected - 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+           });
+           break;
+         };
+         case 'a': {
+           pieces.filter((pc: piecesCordenate, index: number) => {
+             if (index === rectIndexSelected - 4) {
+               if (!pc[2]) {
+               }
+               movements.push([...pc, 0]);
+             }
+             if (index === rectIndexSelected - 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+           });
+           break;
+         };*/
+        case 't': {
+          pieces.forEach((pc: piecesCordenate, index: number) => {
+            if (index === rectIndexSelected - 4) {
+              if (!pc[2]) {
+                movements.push([...pc, rectIndexSelected - 4]);
+              }
+            }
+            if (index === rectIndexSelected - 1) {
+              if (!pc[2]) {
+                movements.push([...pc, rectIndexSelected - 1]);
+              }
+            }
+            if (index === rectIndexSelected + 1) {
+              if (!pc[2]) {
+                movements.push([...pc, rectIndexSelected + 1]);
+              }
+            }
+            if (index === rectIndexSelected + 4) {
+              if (!pc[2]) {
+                movements.push([...pc, rectIndexSelected + 4]);
+              }
+            }
+          });
+          break;
+        };
+        /* case 'r': {
+           pieces.filter((pc: piecesCordenate, index: number) => {
+             if (index === rectIndexSelected - 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected - 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+           });
+           break;
+         };
+         case 'p': {
+           pieces.filter((pc: piecesCordenate, index: number) => {
+             if (index === rectIndexSelected - 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected - 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 1) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+             if (index === rectIndexSelected + 4) {
+               if (!pc[2]) {
+                 movements.push([...pc, 0]);
+               }
+             }
+           });
+           break;
+         };*/
+      }
+    }
+  } else if (rectPointSelected[2] === 'm') {
+    pieces[movements[0][3]][0] = movements[0][0];
+    pieces[movements[0][3]][1] = movements[0][1];
+    pieces[movements[0][3]][2] = movements[0][2];
+
+
+    pieceSelected = null;
+    return;
+  }
+
+  /*
+    if (pieceSelected) {
+      
+    }
+  */
+
   // Calcula el índice del cuadro
   pieceSelected = {
-    size: {
-      x: ((Math.floor(x / squareSize + 2) * 50) + 5),
-      y: ((Math.floor(y / squareSize + 2) * 50) + 5)
-    },
-    piece: pieceFiltes[2]
+    x: ((Math.floor(x / squareSize + 2) * 50) + 5),
+    y: ((Math.floor(y / squareSize + 2) * 50) + 5)
   }
+  //  pieceIndex
+
+
+
 });
 
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+
 const div = document.querySelector<HTMLDivElement>('#app');
-div.style.border = '10px solid red';
-div.style.padding = '10px';
+
+if (div) {
+  div.style.border = '10px solid red';
+  div.style.padding = '10px';
+}
 
 div!.appendChild(canvas1.element);
 div!.appendChild(canvas2.element);
