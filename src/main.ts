@@ -10,6 +10,7 @@ const boardSize = 4;
 const size: Size = { width: squareSize, height: squareSize };
 type pieceID = `${pieceOf}-${number}`;
 type piecesCordenate = { point: Point, pieceId: pieceID | null };
+
 const pieces: piecesCordenate[] = [
   { point: { x: 5, y: 5 }, pieceId: null }, { point: { x: 55, y: 5, }, pieceId: null }, { point: { x: 105, y: 5, }, pieceId: null }, { point: { x: 155, y: 5, }, pieceId: null },
   { point: { x: 5, y: 55, }, pieceId: null }, { point: { x: 55, y: 55, }, pieceId: null }, { point: { x: 105, y: 55, }, pieceId: null }, { point: { x: 155, y: 55, }, pieceId: null },
@@ -81,38 +82,38 @@ function drawBoard(canvas: Canvas, ctx: CanvasRenderingContext2D) {
 function drawPiece(canvas: Canvas) {
   const element: HTMLCanvasElement = canvas.element;
 
-  const caballo1 = new Piece(canvas2, pieceOf.C, size, { x: pieces[0][0], y: pieces[0][1] });
-  const caballo2 = new Piece(canvas2, pieceOf.C, size, { x: pieces[1][0], y: pieces[1][1] });
-  const caballo3 = new Piece(canvas2, pieceOf.C, size, { x: pieces[2][0], y: pieces[2][1] });
-  const caballo4 = new Piece(canvas2, pieceOf.C, size, { x: pieces[3][0], y: pieces[3][1] });
+  const caballo1 = new Piece(canvas2, pieceOf.C, size, { x: pieces[0].point.x, y: pieces[0].point.y });
+  const caballo2 = new Piece(canvas2, pieceOf.C, size, { x: pieces[1].point.x, y: pieces[1].point.y });
+  const caballo3 = new Piece(canvas2, pieceOf.C, size, { x: pieces[2].point.x, y: pieces[2].point.y });
+  const caballo4 = new Piece(canvas2, pieceOf.C, size, { x: pieces[3].point.x, y: pieces[3].point.y });
 
-  const alfil1 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[4][0], y: pieces[4][1] });
-  const alfil2 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[5][0], y: pieces[5][1] });
-  const alfil3 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[6][0], y: pieces[6][1] });
-  const alfil4 = new Piece(canvas2, pieceOf.A, size,{ x: pieces[7][0], y: pieces[7][1] });
+  const alfil1 = new Piece(canvas2, pieceOf.A, size, { x: pieces[4].point.x, y: pieces[4].point.y });
+  const alfil2 = new Piece(canvas2, pieceOf.A, size, { x: pieces[5].point.x, y: pieces[5].point.y });
+  const alfil3 = new Piece(canvas2, pieceOf.A, size, { x: pieces[6].point.x, y: pieces[6].point.y });
+  const alfil4 = new Piece(canvas2, pieceOf.A, size, { x: pieces[7].point.x, y: pieces[7].point.y });
 
-  const torre1 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[8][0], y: pieces[8][1] });
-  const torre2 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[9][0], y: pieces[9][1] });
-  const torre3 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[10][0], y: pieces[10][1] });
-  const torre4 = new Piece(canvas2, pieceOf.T, size,{ x: pieces[11][0], y: pieces[11][1] });
+  const torre1 = new Piece(canvas2, pieceOf.T, size, { x: pieces[8].point.x, y: pieces[8].point.y });
+  const torre2 = new Piece(canvas2, pieceOf.T, size, { x: pieces[9].point.x, y: pieces[9].point.y });
+  const torre3 = new Piece(canvas2, pieceOf.T, size, { x: pieces[10].point.x, y: pieces[10].point.y });
+  const torre4 = new Piece(canvas2, pieceOf.T, size, { x: pieces[11].point.x, y: pieces[11].point.y });
 
-  const peon = new Piece(canvas2, pieceOf.P, size,{ x: pieces[13][0], y: pieces[13][1] });
+  const peon = new Piece(canvas2, pieceOf.P, size, { x: pieces[13].point.x, y: pieces[13].point.y });
 
-  const rey = new Piece(canvas2, pieceOf.R, size,{ x: pieces[12][0], y: pieces[12][1] });
+  const rey = new Piece(canvas2, pieceOf.R, size, { x: pieces[12].point.x, y: pieces[12].point.y });
   rey.visibility = false;
-
 }
 
 function drawPieceSelected(canvas: Canvas) {
-  if (pieceSelected) {
+/*  if (pieceSelected) {
     const ctx: CanvasRenderingContext2D = canvas.ctx;
     ctx.fillStyle = "#f1ff0878";
     ctx.fillRect(pieceSelected.point.x, pieceSelected.point.y, squareSize,
       squareSize);
   }
+  */
 }
 function drawMovements(canvas: Canvas) {
-  if (movements.length > 0) {
+/*  if (movements.length > 0) {
     const ctx: CanvasRenderingContext2D = canvas?.ctx;
     ctx.fillStyle = "#0dff0890";
 
@@ -123,6 +124,7 @@ function drawMovements(canvas: Canvas) {
     })
     pieces[index][2] = "m";
   }
+  */
 }
 
 //plano 2

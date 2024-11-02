@@ -6,10 +6,10 @@ import Sprite from './components/sprite.js';
 
 export enum pieceOf {
   C = 'C',
-    A = 'A',
-    T = 'T',
-    P = 'P',
-    R = 'R'
+  A = 'A',
+  T = 'T',
+  P = 'P',
+  R = 'R'
 };
 
 const pieceName = {
@@ -132,5 +132,3 @@ const pieces: any[] = [
   [5, 55, 'a'], [55, 55, 'a'], [105, 55, 'a'], [155, 55, 'a'],
   [5, 105, 't'], [55, 105, 't'], [105, 105, 't'], [155, 105, 't'],
   [5, 155, null], [155, 155, 'p']];
-/*
-*/
